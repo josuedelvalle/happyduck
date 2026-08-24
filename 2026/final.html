@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Final · Happy Duck Investigation</title>
+    <!-- Apply saved dark-mode preference before first paint, so
+         there's no light->dark flash on load. -->
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem("hd-theme") === "dark") {
+            document.documentElement.setAttribute("data-theme", "dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
     <link rel="icon" type="image/png" href="assets/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,13 +32,22 @@
 
     <!-- Locked state: not all clues found yet -->
     <main id="locked-view" class="final-locked" role="main" hidden>
-      <img
-        id="logo-locked"
-        class="logo"
-        src="assets/logo.png"
-        alt=""
-        aria-hidden="true"
-      />
+      <!-- Tapping the duck toggles dark mode, same as login/intro. -->
+      <button
+        class="logo-btn"
+        type="button"
+        data-theme-toggle
+        aria-label="Toggle dark mode"
+        aria-pressed="false"
+      >
+        <img
+          id="logo-locked"
+          class="logo"
+          src="assets/logo.png"
+          alt=""
+          aria-hidden="true"
+        />
+      </button>
       <div class="pill"><span>🔒</span> The case isn't solved yet</div>
       <h1 class="final-locked__title">Keep investigating</h1>
       <p class="final-locked__text">
@@ -43,13 +63,22 @@
 
     <!-- Solved state -->
     <main id="solved-view" class="card final-card" role="main" hidden>
-      <img
-        id="logo-solved"
-        class="logo logo--float"
-        src="assets/logo.png"
-        alt=""
-        aria-hidden="true"
-      />
+      <!-- Tapping the duck toggles dark mode, same as login/intro. -->
+      <button
+        class="logo-btn"
+        type="button"
+        data-theme-toggle
+        aria-label="Toggle dark mode"
+        aria-pressed="false"
+      >
+        <img
+          id="logo-solved"
+          class="logo logo--float"
+          src="assets/logo.png"
+          alt=""
+          aria-hidden="true"
+        />
+      </button>
 
       <h1 class="final__title">CASE SOLVED</h1>
       <p class="final__subtitle">You pieced the coordinates together.</p>

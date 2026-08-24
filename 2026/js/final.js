@@ -3,6 +3,8 @@
    ============================================================ */
 
 (function () {
+  initTheme(); // dark mode toggle lives in shared.js — logo wraps for both views
+
   const complete = State.isComplete();
 
   if (!complete) {

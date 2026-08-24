@@ -47,5 +47,6 @@
 
   /* ---- Go ---------------------------------------------------*/
   initSlideMenu(render); // slide-out menu lives in shared.js
+  initTheme(); // dark mode toggle lives in shared.js
   render();
 })();

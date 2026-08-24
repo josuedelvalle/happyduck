@@ -66,3 +66,44 @@ function initSlideMenu(onReset) {
     if (e.key === "Escape" && !menu.hidden) closeMenu();
   });
 }
+
+/* ---- Dark mode -----------------------------------------------
+   Persisted in localStorage, applied as data-theme="dark" on
+   <html>. A tiny inline script in each page's <head> already
+   applies the saved theme before first paint (no flash) — this
+   just wires up whichever toggle(s) the page has: the pill switch
+   in the slide-out menu, or a tappable duck logo (#theme-toggle
+   on login/intro; final.html has two — locked view and solved
+   view — marked [data-theme-toggle] instead, since only one can
+   own the #theme-toggle id at a time). Whichever aria-* attribute
+   is present on a given toggle's markup gets kept in sync.
+------------------------------------------------------------- */
+const THEME_KEY = "hd-theme";
+
+function initTheme() {
+  const toggles = $$("#theme-toggle, [data-theme-toggle]");
+  if (!toggles.length) return;
+
+  const sync = (isDark) => {
+    toggles.forEach((toggle) => {
+      toggle.classList.toggle("is-on", isDark);
+      if (toggle.hasAttribute("aria-checked")) {
+        toggle.setAttribute("aria-checked", isDark ? "true" : "false");
+      }
+      if (toggle.hasAttribute("aria-pressed")) {
+        toggle.setAttribute("aria-pressed", isDark ? "true" : "false");
+      }
+    });
+  };
+  sync(document.documentElement.getAttribute("data-theme") === "dark");
+
+  toggles.forEach((toggle) => {
+    toggle.addEventListener("click", () => {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      const next = isDark ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem(THEME_KEY, next);
+      sync(!isDark);
+    });
+  });
+}

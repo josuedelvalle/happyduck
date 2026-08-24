@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Briefing · Happy Duck Investigation</title>
+    <!-- Apply saved dark-mode preference before first paint, so
+         there's no light->dark flash on load. -->
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem("hd-theme") === "dark") {
+            document.documentElement.setAttribute("data-theme", "dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
     <link rel="icon" type="image/png" href="assets/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,12 +29,21 @@
     <p class="case-tag">CASE #2026</p>
 
     <main class="intro" role="main">
-      <img
-        id="logo"
-        class="logo logo--float"
-        src="assets/logo.png"
-        alt="Happy Duck logo"
-      />
+      <!-- Tapping the duck toggles dark mode, same as on the login page. -->
+      <button
+        id="theme-toggle"
+        class="logo-btn"
+        type="button"
+        aria-label="Toggle dark mode"
+        aria-pressed="false"
+      >
+        <img
+          id="logo"
+          class="logo logo--float"
+          src="assets/logo.png"
+          alt="Happy Duck logo"
+        />
+      </button>
 
       <h1 class="intro__title">
         Happy Duck has left clues<br />around the apartment.
@@ -40,6 +60,9 @@
     </main>
 
     <script src="js/shared.js"></script>
+    <script>
+      initTheme(); // dark mode toggle lives in shared.js
+    </script>
     <!-- Guard: bounce to login if there's no session. Needs `vercel
          dev` (the /api functions) — comment this line out to
          preview the page with a plain static server. -->

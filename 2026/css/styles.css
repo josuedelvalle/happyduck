@@ -28,8 +28,53 @@
 
   --radius: 18px;
   --radius-lg: 26px;
-  --shadow-card: 0 1px 2px rgba(31, 41, 51, 0.03), 0 12px 32px rgba(31, 41, 51, 0.06);
+  --shadow-card:
+    0 1px 2px rgba(31, 41, 51, 0.03), 0 12px 32px rgba(31, 41, 51, 0.06);
   --shadow-lift: 0 20px 50px rgba(31, 41, 51, 0.12);
+
+  --header-bg: rgba(248, 244, 236, 0.85);
+  --card-translucent: rgba(255, 252, 248, 0.9);
+}
+
+/* ---- 1b. Dark theme (opt-in via [data-theme="dark"] on <html>) --
+   Same tokens, night palette. Everything else in the file reads
+   these variables, so most of the site repaints for free — the
+   few hardcoded translucent backgrounds get their own overrides
+   further down. */
+:root[data-theme="dark"] {
+  --bg: #14181a;
+  --card: #1e2528;
+  --primary: #82a68e;
+  --primary-dark: #99bba4;
+  --secondary: #5f7867;
+  --ink: #f1efe9;
+  --muted: #9aa3a8;
+  --line: #2b3336;
+  --accent: #e8a54b;
+  --danger: #e2836f;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.2), 0 12px 32px rgba(0, 0, 0, 0.35);
+  --shadow-lift: 0 20px 50px rgba(0, 0, 0, 0.5);
+
+  --header-bg: rgba(20, 24, 26, 0.85);
+  --card-translucent: rgba(30, 37, 40, 0.9);
+}
+
+/* Smooth crossfade when the toggle flips */
+body,
+.header,
+.tabbar,
+.card,
+.menu__panel,
+.modal__panel,
+.room,
+.clue-card,
+.pill,
+.input-wrap {
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
 }
 
 /* ---- 2. Base / reset -------------------------------------- */
@@ -98,18 +143,47 @@ button {
   border-radius: 16px;
   font-size: 15px;
   font-weight: 600;
-  transition: background-color 0.15s ease, transform 0.05s ease, opacity 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    transform 0.05s ease,
+    opacity 0.15s ease;
 }
-.btn:active { transform: scale(0.99); }
-.btn--block { width: 100%; }
-.btn--primary { background: var(--primary); color: #fff; }
-.btn--primary:hover { background: var(--primary-dark); }
-.btn--primary:disabled { opacity: 0.5; cursor: default; }
-.btn--ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
-.btn--ghost:hover { background: rgba(0, 0, 0, 0.03); }
-.btn--danger { background: transparent; color: var(--danger); border: 1px solid rgba(192, 91, 77, 0.3); }
-.btn--danger:hover { background: rgba(192, 91, 77, 0.05); }
-.btn__arrow { font-size: 16px; }
+.btn:active {
+  transform: scale(0.99);
+}
+.btn--block {
+  width: 100%;
+}
+.btn--primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn--primary:hover {
+  background: var(--primary-dark);
+}
+.btn--primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.btn--ghost:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+.btn--danger {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid rgba(192, 91, 77, 0.3);
+}
+.btn--danger:hover {
+  background: rgba(192, 91, 77, 0.05);
+}
+.btn__arrow {
+  font-size: 16px;
+}
 
 /* Cards */
 .card {
@@ -118,7 +192,9 @@ button {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
 }
-.pad { padding: 18px; }
+.pad {
+  padding: 18px;
+}
 
 /* Inputs */
 .field-label {
@@ -139,7 +215,9 @@ button {
   background: var(--bg);
   overflow: hidden;
 }
-.input-wrap__icon { color: var(--muted); }
+.input-wrap__icon {
+  color: var(--muted);
+}
 .input-wrap__toggle {
   background: none;
   border: none;
@@ -156,14 +234,26 @@ button {
   font-size: 16px;
   color: var(--ink);
 }
-.input::placeholder { color: rgba(107, 114, 128, 0.45); }
+.input::placeholder {
+  color: rgba(107, 114, 128, 0.45);
+}
 .input.mono,
-.mono { font-family: var(--font-mono); letter-spacing: 0.15em; }
+.mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.15em;
+}
 
 /* Small text helpers */
-.muted { color: var(--muted); }
-.small { font-size: 12px; }
-.strong { font-weight: 600; color: var(--ink); }
+.muted {
+  color: var(--muted);
+}
+.small {
+  font-size: 12px;
+}
+.strong {
+  font-weight: 600;
+  color: var(--ink);
+}
 .eyebrow {
   font-size: 11px;
   font-weight: 600;
@@ -171,8 +261,19 @@ button {
   text-transform: uppercase;
   color: var(--muted);
 }
-.error-text { margin-top: 8px; font-size: 14px; font-weight: 500; color: var(--danger); text-align: center; }
-.hint { margin-top: 20px; text-align: center; font-size: 12px; color: var(--muted); }
+.error-text {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--danger);
+  text-align: center;
+}
+.hint {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+}
 
 /* ---- 4. Layout helpers ------------------------------------ */
 .page-centered {
@@ -198,22 +299,63 @@ button {
   filter: blur(60px);
   pointer-events: none;
 }
-.blob--green { background: rgba(145, 168, 140, 0.25); top: -60px; right: -50px; }
-.blob--olive { background: rgba(94, 122, 103, 0.14); bottom: -70px; left: -60px; }
+.blob--green {
+  background: rgba(145, 168, 140, 0.25);
+  top: -60px;
+  right: -50px;
+}
+.blob--olive {
+  background: rgba(94, 122, 103, 0.14);
+  bottom: -70px;
+  left: -60px;
+}
 
 /* Logo sizing (the .logo element is the <img src="assets/logo.png"> itself) */
-.logo { width: 64px; height: 64px; display: block; object-fit: contain; }
-.logo--sm { width: 26px; height: 26px; }
-.logo--xs { width: 22px; height: 22px; }
-.logo--float { animation: float 3s ease-in-out infinite; }
+.logo {
+  width: 64px;
+  height: 64px;
+  display: block;
+  object-fit: contain;
+}
+.logo--sm {
+  width: 26px;
+  height: 26px;
+}
+.logo--xs {
+  width: 22px;
+  height: 22px;
+}
+.logo--float {
+  animation: float 3s ease-in-out infinite;
+}
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Soft white halo around the duck silhouette in dark mode — the
+   PNG is transparent outside the duck shape, so drop-shadow traces
+   its outline instead of boxing it. Layered for a glow falloff. */
+[data-theme="dark"] .logo {
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.2))
+    drop-shadow(0 0 8px rgba(255, 255, 255, 0.2))
+    drop-shadow(0 0 18px rgba(255, 255, 255, 0.2));
 }
 
 /* Wordmark */
-.wordmark { text-align: center; margin-top: 12px; }
-.wordmark--left { text-align: left; margin-top: 0; }
+.wordmark {
+  text-align: center;
+  margin-top: 12px;
+}
+.wordmark--left {
+  text-align: left;
+  margin-top: 0;
+}
 .wordmark__title {
   display: block;
   font-family: var(--font-sans);
@@ -230,14 +372,55 @@ button {
   margin-top: 3px;
 }
 
-.intro .logo { margin: 0 auto; }
+.intro .logo {
+  margin: 0 auto;
+}
 
 /* ---- 5. Page: Login --------------------------------------- */
-.login-card { width: 100%; max-width: 380px; padding: 32px; position: relative; }
-.logo-block { display: flex; flex-direction: column; align-items: center; }
-.login-form { margin-top: 30px; }
-.login-form .input-wrap { margin-top: 8px; }
-.login-form .btn { margin-top: 20px; }
+/* Tappable duck — toggles dark mode (login, intro, final). Plain
+   button reset, wrapped tightly around the <img class="logo">, so
+   it inherits that element's sizing exactly. display:block +
+   margin:auto (rather than leaning on the parent's text-align)
+   centers it reliably and forces its own line — a default button
+   is inline-block and would otherwise sit shoulder-to-shoulder
+   with whatever inline content follows it (e.g. final.html's
+   "case isn't solved" pill). */
+.logo-btn {
+  display: block;
+  margin: 0 auto;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.15s ease;
+}
+.logo-btn:hover {
+  transform: scale(1.06);
+}
+.logo-btn:active {
+  transform: scale(0.95);
+}
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  padding: 32px;
+  position: relative;
+}
+.logo-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.login-form {
+  margin-top: 30px;
+}
+.login-form .input-wrap {
+  margin-top: 8px;
+}
+.login-form .btn {
+  margin-top: 20px;
+}
 .footer-tag {
   position: absolute;
   bottom: 22px;
@@ -249,13 +432,19 @@ button {
 /* ---- 5. Page: Intro --------------------------------------- */
 .case-tag {
   position: absolute;
-  top: 24px; left: 0; right: 0;
+  top: 24px;
+  left: 0;
+  right: 0;
   text-align: center;
   font-size: 11px;
   letter-spacing: 0.35em;
   color: var(--muted);
 }
-.intro { position: relative; max-width: 340px; text-align: center; }
+.intro {
+  position: relative;
+  max-width: 340px;
+  text-align: center;
+}
 .intro__title {
   margin-top: 28px;
   font-family: var(--font-sans);
@@ -271,7 +460,9 @@ button {
   line-height: 1.6;
   color: var(--muted);
 }
-.intro__cta { margin-top: 30px; }
+.intro__cta {
+  margin-top: 30px;
+}
 
 /* ---- 5. Page: Dashboard — header -------------------------- */
 .header {
@@ -279,7 +470,7 @@ button {
   top: 0;
   z-index: 30;
   border-bottom: 1px solid var(--line);
-  background: rgba(248, 244, 236, 0.85);
+  background: var(--header-bg);
   backdrop-filter: blur(8px);
 }
 .header__inner {
@@ -290,38 +481,65 @@ button {
   align-items: center;
   justify-content: space-between;
 }
-.header__left { display: flex; align-items: center; gap: 8px; }
-.header__right { display: flex; align-items: center; gap: 10px; }
+.header__left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* .logo-btn's centering margin is for standalone pages (login,
+   intro, final) — inside this flex row it would fight the row's
+   own layout, so drop it back to 0 here. */
+.header__left .logo-btn {
+  margin: 0;
+}
+.header__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .header__title {
   font-family: var(--font-sans);
   font-size: 13px;
   letter-spacing: 0.14em;
   font-weight: 600;
 }
-.header__case { font-size: 10px; letter-spacing: 0.2em; color: var(--muted); }
+.header__case {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+}
 .icon-btn {
   display: grid;
   place-items: center;
-  width: 40px; height: 40px;
+  width: 40px;
+  height: 40px;
   border: none;
   background: none;
   border-radius: 12px;
   font-size: 20px;
   color: var(--ink);
 }
-.icon-btn:hover { background: rgba(0, 0, 0, 0.04); }
+.icon-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
 
 /* ---- Dashboard — slide-out menu --------------------------- */
-.menu { position: fixed; inset: 0; z-index: 50; }
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+}
 .menu__backdrop {
-  position: absolute; inset: 0;
+  position: absolute;
+  inset: 0;
   background: rgba(31, 41, 51, 0.3);
   backdrop-filter: blur(2px);
   animation: fade 0.2s ease;
 }
 .menu__panel {
   position: absolute;
-  left: 0; top: 0;
+  left: 0;
+  top: 0;
   height: 100%;
   width: 82%;
   max-width: 360px;
@@ -332,10 +550,33 @@ button {
   flex-direction: column;
   animation: slide-in 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
 }
-@keyframes slide-in { from { transform: translateX(-100%); } to { transform: translateX(0); } }
-@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-.menu__head { display: flex; align-items: center; justify-content: space-between; }
-.menu__nav { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.menu__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.menu__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
 .menu__item {
   display: flex;
   align-items: center;
@@ -350,12 +591,26 @@ button {
   font-weight: 500;
   color: var(--ink);
 }
-.menu__item span { color: var(--primary); }
-.menu__item:hover { background: rgba(0, 0, 0, 0.03); }
-.menu__item--danger { color: var(--danger); }
-.menu__item--danger span { color: var(--danger); }
-.menu__nav:first-of-type { margin-top: 32px; }
-.menu__divider { height: 1px; background: var(--line); margin: 16px 0; }
+.menu__item span {
+  color: var(--primary);
+}
+.menu__item:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+.menu__item--danger {
+  color: var(--danger);
+}
+.menu__item--danger span {
+  color: var(--danger);
+}
+.menu__nav:first-of-type {
+  margin-top: 32px;
+}
+.menu__divider {
+  height: 1px;
+  background: var(--line);
+  margin: 16px 0;
+}
 .menu__foot {
   margin-top: auto;
   display: flex;
@@ -365,11 +620,76 @@ button {
   color: var(--muted);
   font-size: 14px;
 }
-.menu__h2 { margin-top: 40px; font-family: var(--font-sans); font-size: 20px; font-weight: 600; }
-.menu__p { margin-top: 8px; font-size: 15px; line-height: 1.55; color: var(--muted); }
-.menu__p--small { margin-top: 12px; font-size: 13px; }
-.menu__actions { margin-top: 24px; display: flex; gap: 12px; }
-.menu__actions .btn { flex: 1; }
+.menu__h2 {
+  margin-top: 40px;
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 600;
+}
+.menu__p {
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.menu__p--small {
+  margin-top: 12px;
+  font-size: 13px;
+}
+.menu__actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+}
+.menu__actions .btn {
+  flex: 1;
+}
+
+/* Dark mode row (same rhythm as .menu__item) */
+.menu__theme {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+}
+.menu__theme-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.menu__theme-label span {
+  color: var(--primary);
+}
+
+.switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 26px;
+  padding: 3px;
+  border: none;
+  border-radius: 99px;
+  background: var(--line);
+  transition: background-color 0.2s ease;
+}
+.switch__thumb {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.switch.is-on {
+  background: var(--primary);
+}
+.switch.is-on .switch__thumb {
+  transform: translateX(18px);
+}
 
 /* ---- Dashboard — content ---------------------------------- */
 .dashboard {
@@ -393,10 +713,21 @@ button {
   border-radius: 99px;
   transition: width 0.5s cubic-bezier(0.2, 0.9, 0.3, 1);
 }
-.progress__pct { margin-top: 6px; text-align: right; font-size: 12px; color: var(--muted); }
+.progress__pct {
+  margin-top: 6px;
+  text-align: right;
+  font-size: 12px;
+  color: var(--muted);
+}
 
-.coord-card { display: block; border-color: rgba(94, 122, 103, 0.3); transition: border-color 0.15s; }
-.coord-card:hover { border-color: var(--primary); }
+.coord-card {
+  display: block;
+  border-color: rgba(94, 122, 103, 0.3);
+  transition: border-color 0.15s;
+}
+.coord-card:hover {
+  border-color: var(--primary);
+}
 .coord {
   margin-top: 12px;
   font-family: var(--font-mono);
@@ -404,9 +735,17 @@ button {
   letter-spacing: -0.01em;
   color: var(--ink);
 }
-.coord--sm { font-size: 20px; }
-.coord__sep { color: var(--muted); margin: 0 6px; }
-.chevron { color: var(--muted); font-size: 20px; }
+.coord--sm {
+  font-size: 20px;
+}
+.coord__sep {
+  color: var(--muted);
+  margin: 0 6px;
+}
+.chevron {
+  color: var(--muted);
+  font-size: 20px;
+}
 .coord-card .coord,
 .coord-card #coord-hint {
   text-align: center;
@@ -420,7 +759,9 @@ button {
 }
 /* 3 columns on wider screens (tablet / desktop) */
 @media (min-width: 560px) {
-  .grid { grid-template-columns: 1fr 1fr 1fr; }
+  .grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
 .room {
   overflow: hidden;
@@ -431,31 +772,50 @@ button {
   text-align: left;
   padding: 0;
 }
-.room__img { position: relative; height: 80px; }
+.room__img {
+  position: relative;
+  height: 80px;
+}
 .room__check {
   position: absolute;
-  right: 8px; top: 8px;
-  width: 24px; height: 24px;
+  right: 8px;
+  top: 8px;
+  width: 24px;
+  height: 24px;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: rgba(255, 252, 248, 0.9);
+  background: var(--card-translucent);
   color: var(--primary);
   font-size: 14px;
 }
-.room__body { padding: 9px 12px; }
-.room__name { font-size: 13px; font-weight: 600; color: var(--ink); }
-.room__status { font-size: 11px; }
-.room__status.is-done { color: var(--primary); }
-.room__status.is-todo { color: var(--muted); }
+.room__body {
+  padding: 9px 12px;
+}
+.room__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.room__status {
+  font-size: 11px;
+}
+.room__status.is-done {
+  color: var(--primary);
+}
+.room__status.is-todo {
+  color: var(--muted);
+}
 
 /* ---- Dashboard — bottom nav ------------------------------- */
 .tabbar {
   position: fixed;
-  bottom: 0; left: 0; right: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 30;
   border-top: 1px solid var(--line);
-  background: rgba(255, 252, 248, 0.9);
+  background: var(--card-translucent);
   backdrop-filter: blur(8px);
   display: flex;
   justify-content: space-around;
@@ -470,14 +830,30 @@ button {
   font-weight: 500;
   color: var(--muted);
 }
-.tabbar__item span { font-size: 18px; }
-.tabbar__item.is-active { color: var(--primary); }
+.tabbar__item span {
+  font-size: 18px;
+}
+.tabbar__item.is-active {
+  color: var(--primary);
+}
 
 /* ---- Dashboard — room modal ------------------------------- */
-.modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-end; justify-content: center; }
-@media (min-width: 560px) { .modal { align-items: center; } }
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+@media (min-width: 560px) {
+  .modal {
+    align-items: center;
+  }
+}
 .modal__backdrop {
-  position: absolute; inset: 0;
+  position: absolute;
+  inset: 0;
   background: rgba(31, 41, 51, 0.4);
   backdrop-filter: blur(2px);
   animation: fade 0.2s ease;
@@ -493,8 +869,21 @@ button {
   box-shadow: var(--shadow-lift);
   animation: slide-up 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
 }
-@media (min-width: 560px) { .modal__panel { border-radius: 26px; } }
-@keyframes slide-up { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@media (min-width: 560px) {
+  .modal__panel {
+    border-radius: 26px;
+  }
+}
+@keyframes slide-up {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
 .modal__image {
   position: relative;
   height: 128px;
@@ -503,33 +892,80 @@ button {
 }
 .modal__close {
   position: absolute;
-  right: 12px; top: 12px;
-  width: 32px; height: 32px;
-  display: grid; place-items: center;
+  right: 12px;
+  top: 12px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
   border: none;
   border-radius: 10px;
-  background: rgba(255, 252, 248, 0.8);
+  background: var(--card-translucent);
   color: var(--muted);
 }
-.modal__head { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
-.modal__pin-inline { color: var(--primary); }
-.modal__title { font-family: var(--font-sans); font-size: 20px; font-weight: 600; }
-.modal__status { display: inline-block; margin-top: 4px; font-size: 12px; font-weight: 500; color: var(--muted); }
-.modal__status.is-done { color: var(--primary); }
-.modal__desc { margin-top: 12px; font-size: 15px; line-height: 1.55; color: var(--muted); }
-.modal .field-label { margin-top: 20px; }
-.modal__code-row { display: flex; gap: 8px; margin-top: 8px; }
-.modal__code-row .input-wrap { flex: 1; }
-.modal__note { margin-top: 16px; text-align: center; font-size: 12px; color: var(--muted); }
+.modal__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+.modal__pin-inline {
+  color: var(--primary);
+}
+.modal__title {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 600;
+}
+.modal__status {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.modal__status.is-done {
+  color: var(--primary);
+}
+.modal__desc {
+  margin-top: 12px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.modal .field-label {
+  margin-top: 20px;
+}
+.modal__code-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.modal__code-row .input-wrap {
+  flex: 1;
+}
+.modal__note {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+}
 
 /* Feedback boxes inside modal */
-.feedback { margin-top: 16px; padding: 16px; border-radius: var(--radius); font-size: 14px; }
+.feedback {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: var(--radius);
+  font-size: 14px;
+}
 .feedback.is-ok {
   border: 1px solid rgba(94, 122, 103, 0.3);
   background: rgba(94, 122, 103, 0.08);
   color: var(--ink);
 }
-.feedback.is-ok strong { color: var(--primary); }
+.feedback.is-ok strong {
+  color: var(--primary);
+}
 .feedback.is-bad {
   border: 1px solid rgba(192, 91, 77, 0.3);
   background: rgba(192, 91, 77, 0.05);
@@ -537,16 +973,34 @@ button {
   animation: shake 0.4s ease;
 }
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-6px); }
-  40% { transform: translateX(6px); }
-  60% { transform: translateX(-3px); }
-  80% { transform: translateX(3px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(6px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
 }
 
 /* ---- 5. Page: Clues ----------------------------------------- */
-.clues-intro { line-height: 1.5; }
-.clue-list { display: flex; flex-direction: column; gap: 12px; list-style: none; }
+.clues-intro {
+  line-height: 1.5;
+}
+.clue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+}
 .clue-card {
   background: var(--card);
   border: 1px solid var(--line);
@@ -555,17 +1009,31 @@ button {
   padding: 16px 18px;
   transition: opacity 0.15s ease;
 }
-.clue-card__head { display: flex; align-items: center; gap: 8px; }
-.clue-card__icon { font-size: 15px; }
-.clue-card__loc { font-size: 13px; font-weight: 600; color: var(--ink); }
+.clue-card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.clue-card__icon {
+  font-size: 15px;
+}
+.clue-card__loc {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
 .clue-card__text {
   margin-top: 8px;
   font-size: 15px;
   line-height: 1.55;
   color: var(--ink);
 }
-.clue-card.is-locked { opacity: 0.55; }
-.clue-card.is-locked .clue-card__icon { filter: grayscale(1); }
+.clue-card.is-locked {
+  opacity: 0.55;
+}
+.clue-card.is-locked .clue-card__icon {
+  filter: grayscale(1);
+}
 .clue-card__text--locked {
   font-weight: 500;
   color: var(--muted);
@@ -580,7 +1048,9 @@ button {
   position: relative;
 }
 .final-card .logo,
-.final-locked .logo { margin: 0 auto; }
+.final-locked .logo {
+  margin: 0 auto;
+}
 .final__title {
   margin-top: 22px;
   font-family: var(--font-sans);
@@ -588,25 +1058,67 @@ button {
   letter-spacing: 0.04em;
   color: var(--ink);
 }
-.final__subtitle { margin-top: 8px; font-size: 15px; color: var(--muted); }
-.final__coord { margin-top: 18px; font-size: 23px; }
-.final__reveal { margin-top: 28px; }
-.destination { margin-top: 28px; animation: pop 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
-@keyframes pop { from { transform: scale(0.96); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.final__subtitle {
+  margin-top: 8px;
+  font-size: 15px;
+  color: var(--muted);
+}
+.final__coord {
+  margin-top: 18px;
+  font-size: 23px;
+}
+.final__reveal {
+  margin-top: 28px;
+}
+.destination {
+  margin-top: 28px;
+  animation: pop 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+@keyframes pop {
+  from {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 .destination__box {
   border: 1px solid rgba(94, 122, 103, 0.3);
   background: rgba(94, 122, 103, 0.08);
   border-radius: var(--radius);
   padding: 22px;
 }
-.destination__name { margin-top: 8px; font-family: var(--font-sans); font-size: 24px; color: var(--ink); }
-.destination__coord { margin-top: 4px; font-size: 14px; color: var(--muted); }
-.final__maps { margin-top: 16px; }
-.final__home { display: inline-block; margin-top: 22px; font-size: 14px; color: var(--muted); }
-.final__home:hover { color: var(--ink); }
+.destination__name {
+  margin-top: 8px;
+  font-family: var(--font-sans);
+  font-size: 24px;
+  color: var(--ink);
+}
+.destination__coord {
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.final__maps {
+  margin-top: 16px;
+}
+.final__home {
+  display: inline-block;
+  margin-top: 22px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.final__home:hover {
+  color: var(--ink);
+}
 
 /* Final — locked view */
-.final-locked { text-align: center; max-width: 340px; }
+.final-locked {
+  text-align: center;
+  max-width: 340px;
+}
 .pill {
   display: inline-flex;
   align-items: center;
@@ -619,7 +1131,19 @@ button {
   font-size: 14px;
   color: var(--muted);
 }
-.final-locked__title { margin-top: 16px; font-family: var(--font-sans); font-size: 24px; }
-.final-locked__text { margin-top: 8px; font-size: 15px; color: var(--muted); }
-.final-locked .coord { margin-top: 16px; }
-.final-locked__back { margin-top: 32px; }
+.final-locked__title {
+  margin-top: 16px;
+  font-family: var(--font-sans);
+  font-size: 24px;
+}
+.final-locked__text {
+  margin-top: 8px;
+  font-size: 15px;
+  color: var(--muted);
+}
+.final-locked .coord {
+  margin-top: 16px;
+}
+.final-locked__back {
+  margin-top: 32px;
+}

@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Clues · Happy Duck Investigation</title>
+    <!-- Apply saved dark-mode preference before first paint, so
+         there's no light->dark flash on load. -->
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem("hd-theme") === "dark") {
+            document.documentElement.setAttribute("data-theme", "dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
     <link rel="icon" type="image/png" href="assets/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,13 +32,22 @@
           <button id="menu-btn" class="icon-btn" aria-label="Open menu">
             ☰
           </button>
-          <img
-            id="logo"
-            class="logo logo--sm"
-            src="assets/logo.png"
-            alt=""
-            aria-hidden="true"
-          />
+          <!-- Tapping the duck toggles dark mode, same as login/intro/final. -->
+          <button
+            class="logo-btn"
+            type="button"
+            data-theme-toggle
+            aria-label="Toggle dark mode"
+            aria-pressed="false"
+          >
+            <img
+              id="logo"
+              class="logo logo--sm"
+              src="assets/logo.png"
+              alt=""
+              aria-hidden="true"
+            />
+          </button>
           <span class="header__title">HAPPY DUCK</span>
         </div>
         <div class="header__right">
@@ -78,6 +98,20 @@
               <span>ⓘ</span> About
             </button>
           </nav>
+          <div class="menu__divider"></div>
+          <div class="menu__theme">
+            <span class="menu__theme-label"><span>🌙</span> Dark mode</span>
+            <button
+              id="theme-toggle"
+              class="switch"
+              type="button"
+              role="switch"
+              aria-checked="false"
+              aria-label="Toggle dark mode"
+            >
+              <span class="switch__thumb"></span>
+            </button>
+          </div>
           <div class="menu__foot">
             <img
               id="logo-foot"

@@ -6,6 +6,18 @@
     <title>Happy Duck Investigation</title>
     <meta name="description" content="A confidential birthday mystery." />
 
+    <!-- Apply saved dark-mode preference before first paint, so
+         there's no light->dark flash on load. -->
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem("hd-theme") === "dark") {
+            document.documentElement.setAttribute("data-theme", "dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/favicon.png" />
 
@@ -26,9 +38,22 @@
     <div class="blob blob--olive"></div>
 
     <main class="card login-card" role="main">
-      <!-- Logo + wordmark. -->
+      <!-- Logo + wordmark. Tapping the duck toggles dark mode. -->
       <div class="logo-block">
-        <img id="logo" class="logo" src="assets/logo.png" alt="Happy Duck logo" />
+        <button
+          id="theme-toggle"
+          class="logo-btn"
+          type="button"
+          aria-label="Toggle dark mode"
+          aria-pressed="false"
+        >
+          <img
+            id="logo"
+            class="logo"
+            src="assets/logo.png"
+            alt="Happy Duck logo"
+          />
+        </button>
         <div class="wordmark">
           <span class="wordmark__title">HAPPY DUCK</span>
           <span class="wordmark__sub">INVESTIGATION</span>

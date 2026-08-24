@@ -13,6 +13,8 @@
   const submit = $("#submit");
   const toggle = $("#toggle-pw");
 
+  initTheme(); // dark mode toggle lives in shared.js
+
   // Show / hide the password field.
   toggle.addEventListener("click", () => {
     input.type = input.type === "password" ? "text" : "password";
