@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Final · Happy Duck Investigation</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="page-centered">
+    <div
+      class="blob blob--green"
+      style="left: 50%; top: -90px; transform: translateX(-50%)"
+    ></div>
+
+    <!-- Locked state: not all clues found yet -->
+    <main id="locked-view" class="final-locked" role="main" hidden>
+      <img
+        id="logo-locked"
+        class="logo"
+        src="assets/logo.png"
+        alt=""
+        aria-hidden="true"
+      />
+      <div class="pill"><span>🔒</span> The case isn't solved yet</div>
+      <h1 class="final-locked__title">Keep investigating</h1>
+      <p class="final-locked__text">
+        You've found <span id="locked-found">0</span> of
+        <span id="locked-total">6</span> clues. Complete the coordinates to
+        reveal the destination.
+      </p>
+      <div class="coord coord--sm" id="locked-coord">__.____ , _.____</div>
+      <a href="dashboard.html" class="btn btn--ghost final-locked__back"
+        >← Back to investigation</a
+      >
+    </main>
+
+    <!-- Solved state -->
+    <main id="solved-view" class="card final-card" role="main" hidden>
+      <img
+        id="logo-solved"
+        class="logo logo--float"
+        src="assets/logo.png"
+        alt=""
+        aria-hidden="true"
+      />
+
+      <h1 class="final__title">CASE SOLVED</h1>
+      <p class="final__subtitle">You pieced the coordinates together.</p>
+      <div class="coord final__coord" id="final-coord">48.8726, 2.7767</div>
+
+      <!-- Reveal button (before) -->
+      <button id="reveal-btn" class="btn btn--primary btn--block final__reveal">
+        Reveal Destination
+      </button>
+
+      <!-- Destination (after reveal) -->
+      <div id="destination" class="destination" hidden>
+        <div class="destination__box">
+          <p class="eyebrow">Your destination</p>
+          <p class="destination__name" id="dest-name">Disneyland Paris</p>
+          <p class="destination__coord">
+            <span>📍</span> <span id="dest-coord">48.8726, 2.7767</span>
+          </p>
+        </div>
+        <a
+          id="maps-link"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn--primary btn--block final__maps"
+        >
+          Open in Maps ↗
+        </a>
+      </div>
+
+      <a href="dashboard.html" class="final__home">← Back to home</a>
+    </main>
+
+    <script src="js/shared.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/state.js"></script>
+    <!-- Guard: bounce to login if there's no session. Needs `vercel
+         dev` (the /api functions) — comment this line out to
+         preview the page with a plain static server. -->
+    <script src="js/guard.js"></script>
+    <script src="js/final.js"></script>
+  </body>
+</html>

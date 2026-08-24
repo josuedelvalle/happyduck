@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clues · Happy Duck Investigation</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <!-- ===== Header ===== -->
+    <header class="header">
+      <div class="header__inner">
+        <div class="header__left">
+          <button id="menu-btn" class="icon-btn" aria-label="Open menu">
+            ☰
+          </button>
+          <img
+            id="logo"
+            class="logo logo--sm"
+            src="assets/logo.png"
+            alt=""
+            aria-hidden="true"
+          />
+          <span class="header__title">HAPPY DUCK</span>
+        </div>
+        <div class="header__right">
+          <span class="header__case">CASE #2026</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== Slide-out menu ===== -->
+    <div id="menu" class="menu" hidden>
+      <div class="menu__backdrop" data-close-menu></div>
+      <aside class="menu__panel" role="dialog" aria-label="Menu">
+        <div class="menu__head">
+          <div class="header__left">
+            <img
+              id="logo-menu"
+              class="logo logo--sm"
+              src="assets/logo.png"
+              alt=""
+              aria-hidden="true"
+            />
+            <div class="wordmark wordmark--left">
+              <span class="wordmark__title">HAPPY DUCK</span>
+              <span class="wordmark__sub">INVESTIGATION</span>
+            </div>
+          </div>
+          <button class="icon-btn" data-close-menu aria-label="Close menu">
+            ✕
+          </button>
+        </div>
+
+        <!-- Default menu view -->
+        <div id="menu-main">
+          <nav class="menu__nav">
+            <a href="dashboard.html" class="menu__item"><span>🗺</span> Map</a>
+            <a href="final.html" class="menu__item"><span>📄</span> Evidence</a>
+            <a href="clues.html" class="menu__item"><span>💡</span> Clues</a>
+          </nav>
+          <div class="menu__divider"></div>
+          <nav class="menu__nav">
+            <button id="reset-open" class="menu__item menu__item--danger">
+              <span>↺</span> Reset Investigation
+            </button>
+            <button id="about-open" class="menu__item">
+              <span>ⓘ</span> About
+            </button>
+          </nav>
+          <div class="menu__foot">
+            <img
+              id="logo-foot"
+              class="logo logo--xs"
+              src="assets/logo.png"
+              alt=""
+              aria-hidden="true"
+            />
+            <span>Case #2026</span>
+          </div>
+        </div>
+
+        <!-- Reset confirmation view -->
+        <div id="menu-reset" hidden>
+          <h2 class="menu__h2">Reset the investigation?</h2>
+          <p class="menu__p">
+            All collected clues, coordinates and progress will be permanently
+            erased. This can't be undone.
+          </p>
+          <div class="menu__actions">
+            <button class="btn btn--ghost" data-reset-cancel>Cancel</button>
+            <button class="btn btn--danger" id="reset-confirm">Reset</button>
+          </div>
+        </div>
+
+        <!-- About view -->
+        <div id="menu-about" hidden>
+          <h2 class="menu__h2">About</h2>
+          <p class="menu__p">
+            Happy Duck Investigation is a private birthday treasure hunt. Find
+            the postcards hidden around the home, enter their codes, and piece
+            together the coordinates that reveal the gift.
+          </p>
+          <p class="menu__p menu__p--small">Case #2026 · Made with care.</p>
+          <div class="menu__actions">
+            <button class="btn btn--ghost" data-about-back>Back</button>
+            <button class="btn btn--ghost" id="signout-btn">Log out</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ===== Content ===== -->
+    <main class="dashboard" role="main">
+      <!-- Progress card -->
+      <section class="card pad">
+        <div class="row-between">
+          <span class="muted">Clues found</span>
+          <span class="strong"
+            ><span id="found-count">0</span> /
+            <span id="total-count">6</span></span
+          >
+        </div>
+        <div class="progress">
+          <div id="progress-bar" class="progress__bar" style="width: 0%"></div>
+        </div>
+        <div class="progress__pct"><span id="progress-pct">0</span>%</div>
+      </section>
+
+      <p class="clues-intro muted small">
+        Every postcard hides a hint about where Happy Duck is sending you.
+        Investigate a room to reveal its clue.
+      </p>
+
+      <!-- Clue list — built by JS from config + progress -->
+      <ul id="clue-list" class="clue-list" aria-label="Clues"></ul>
+    </main>
+
+    <!-- ===== iOS-style bottom nav ===== -->
+    <nav class="tabbar" aria-label="Sections">
+      <a href="dashboard.html" class="tabbar__item"><span>🗺</span>Map</a>
+      <a href="final.html" class="tabbar__item"><span>📄</span>Evidence</a>
+      <a href="clues.html" class="tabbar__item is-active"
+        ><span>💡</span>Clues</a
+      >
+    </nav>
+
+    <script src="js/shared.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/state.js"></script>
+    <!-- Guard: bounce to login if there's no session. Needs `vercel
+         dev` (the /api functions) — comment this line out to
+         preview the page with a plain static server. -->
+    <script src="js/guard.js"></script>
+    <script src="js/clues.js"></script>
+  </body>
+</html>

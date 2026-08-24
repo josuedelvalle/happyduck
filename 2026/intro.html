@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Briefing · Happy Duck Investigation</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="page-centered">
+    <!-- Case tag -->
+    <p class="case-tag">CASE #2026</p>
+
+    <main class="intro" role="main">
+      <img
+        id="logo"
+        class="logo logo--float"
+        src="assets/logo.png"
+        alt="Happy Duck logo"
+      />
+
+      <h1 class="intro__title">
+        Happy Duck has left clues<br />around the apartment.
+      </h1>
+      <p class="intro__text">
+        Piece the numbers together and discover the destination.
+      </p>
+
+      <!-- Plain link styled as a button — no JS needed to navigate -->
+      <a href="dashboard.html" class="btn btn--primary intro__cta">
+        <span class="btn__label">Start Investigation</span>
+        <span class="btn__arrow" aria-hidden="true">→</span>
+      </a>
+    </main>
+
+    <script src="js/shared.js"></script>
+    <!-- Guard: bounce to login if there's no session. Needs `vercel
+         dev` (the /api functions) — comment this line out to
+         preview the page with a plain static server. -->
+    <script src="js/guard.js"></script>
+  </body>
+</html>
