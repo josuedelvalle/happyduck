@@ -407,6 +407,10 @@ button {
 .coord--sm { font-size: 20px; }
 .coord__sep { color: var(--muted); margin: 0 6px; }
 .chevron { color: var(--muted); font-size: 20px; }
+.coord-card .coord,
+.coord-card #coord-hint {
+  text-align: center;
+}
 
 /* Locations grid */
 .grid {
