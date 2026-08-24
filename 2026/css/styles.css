@@ -732,12 +732,18 @@ button {
   margin-top: 12px;
   font-family: var(--font-mono);
   font-size: 29px;
-  /* Positive tracking, not the usual tight mono default — the
-     placeholder digits are literal "_" characters (see
-     state.js#_revealAxis), and underscores sit flush against
-     each other at the baseline, so two unrevealed digits in a
-     row read as one long dash without the extra gap. */
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
+  /* JetBrains Mono has a ligature that joins consecutive "_"
+     into one continuous stroke (handy for `__init__`, not for
+     our per-digit placeholders — see state.js#_revealAxis).
+     WebKit/Safari applies it by default; Chromium's default
+     rendering happened not to here, which is why this was
+     invisible in Chrome. Turn ligatures off so every digit
+     placeholder stays visually separate everywhere. */
+  font-variant-ligatures: none;
+  font-feature-settings:
+    "calt" 0,
+    "liga" 0;
   color: var(--ink);
 }
 .coord--sm {
