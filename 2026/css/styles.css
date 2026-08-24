@@ -732,7 +732,12 @@ button {
   margin-top: 12px;
   font-family: var(--font-mono);
   font-size: 29px;
-  letter-spacing: -0.01em;
+  /* Positive tracking, not the usual tight mono default — the
+     placeholder digits are literal "_" characters (see
+     state.js#_revealAxis), and underscores sit flush against
+     each other at the baseline, so two unrevealed digits in a
+     row read as one long dash without the extra gap. */
+  letter-spacing: 0.06em;
   color: var(--ink);
 }
 .coord--sm {
