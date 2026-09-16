@@ -1,0 +1,15 @@
+# Local secrets — the login password and the postcard codes live here
+# and must never reach the repo. See private/secrets.md.
+private/
+
+# Vercel env files (vercel dev reads .env.local)
+.env
+.env.local
+.env.*.local
+
+# Vercel / tooling
+.vercel/
+node_modules/
+
+# macOS
+.DS_Store

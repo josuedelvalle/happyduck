@@ -3,32 +3,57 @@
 A private birthday **mystery** web app, built with plain **HTML, CSS and
 JavaScript** — plus one tiny serverless function so the password stays secret.
 
-The player logs in, investigates rooms, finds hidden physical postcards, enters
-their codes, and pieces together the coordinates that reveal the gift.
+The 2026 edition runs **two parallel cases**: two gifts, in two places. The
+player logs in, investigates rooms, finds hidden physical postcards and enters
+their codes. Each postcard reveals a clue and a slice of its case's **codeword**,
+which fills in letter by letter. A case can also be closed early by simply
+**naming it** — guessing `PERFUME` from two clues closes that file on the spot.
+When both are closed, the final screen reveals the two workshops with their
+Maps links.
 
 ## What's inside
 
 ```
 index.html          Login
 intro.html          Briefing
-dashboard.html      Main screen (progress, coordinates, rooms, menu)
+dashboard.html      Main screen (progress, the two case files, rooms, menu)
+clues.html          All clues, grouped by case
 final.html          Reveal
 css/styles.css      All styles (organised with comments)
 js/
   config.js         ← everything you edit each year
-  shared.js         DOM helpers + the shared slide-out menu
+  shared.js         DOM helpers + the shared slide-out menu + dark mode
   state.js          progress saved in localStorage
   guard.js          bounces you to login if not authenticated
   login.js          sends the password to the server
-  dashboard.js      main screen logic (rooms, modal, menu)
+  dashboard.js      main screen logic (cases, guessing, rooms, modal)
+  clues.js          clue list, grouped by case
   final.js          reveal logic
 api/                ← the only server-side code (Vercel functions)
   login.js          checks the password, sets an HttpOnly cookie
   check.js          says whether you're logged in
   logout.js         clears the cookie
 assets/             favicon.png (tab icon) + logo.png (header/menu duck)
-                    — logo.svg/favicon.svg are unused leftovers
+                    + one photo per room
 ```
+
+## How the two cases work
+
+Each entry in `CONFIG.cases` has a `word` (the codeword), an `accept` list of
+guesses that count as correct, and a `reveal` block with the workshop details
+shown at the end.
+
+Each postcard in `CONFIG.codes` names its `caseId` and carries a
+`fragment: { at, value }` — the position in that word and the letters it fills.
+Three postcards per case, `LE · AT · HER` and `PE · RF · UME`.
+
+Guesses are normalised before comparison (lowercased, accents stripped, a
+leading article dropped), so `Perfume`, `perfumería` and `el parfum` all match.
+
+Progress lives in localStorage under `happyduck.progress.v2` as
+`{ found: [...], solved: [...] }` — the codes found, and the cases closed by
+guessing. Everything else is derived from those two lists, so a reset is one
+`removeItem`.
 
 ## The password is safe
 
@@ -39,24 +64,22 @@ session cookie the browser's JavaScript can't read. The private pages ask
 `api/check.js` whether that cookie is valid. This is the standard "never trust
 the client" pattern, in its simplest form.
 
-> Everything else (which rooms are done, the clues, the coordinates) is _not_
-> secret — it's a birthday game — so it lives happily in the browser.
+There is no hardcoded fallback password: if `APP_PASSWORD` is unset the login
+fails closed. A default password committed to a repo is a password in the repo.
+
+> Everything else (which rooms are done, the clues, the codewords) is _not_
+> secret — it's a birthday game, and `config.js` is served to the browser — so it
+> lives happily on the client.
 
 ## Run it locally
 
 You need the free Vercel CLI so the `/api` functions work on your machine:
 
 ```bash
-npm i -g vercel      # once
-vercel dev           # runs the site + functions at http://localhost:3000
+npm i -g vercel                          # once
+echo "APP_PASSWORD=yourcode" > .env.local  # once, and never commit it
+vercel dev                               # site + functions at localhost:3000
 ```
-
-Local dev password: **`230993`** (the fallback in `api/login.js`).
-To use your own locally, create `.env.local` with `APP_PASSWORD=yourcode`.
-
-Test codes (enter all six to solve the case):
-`8802` Bedroom · `1093` Kitchen · `2264` Laundry · `4571` Living ·
-`6619` Dining · `3390` Basement.
 
 > Opening `index.html` directly with a double-click will show the pages, but the
 > login and the guard won't work without the functions — use `vercel dev`.
@@ -73,8 +96,12 @@ Test codes (enter all six to solve the case):
 
 ## Customise it (once a year)
 
-Open **`js/config.js`**: change the case number, the rooms, the six postcard
-codes with their clues and coordinate fragments, and the destination. Change the
-password in Vercel. Print the postcards, hide them — done.
+Open **`js/config.js`**: change the case number, the two cases (codeword,
+accepted guesses, reveal details), the rooms, and the six postcard codes with
+their clues and letter fragments. Change `APP_PASSWORD` in Vercel. Print the
+postcards, hide them — done.
+
+The postcard codes and the login password are **not** written down in this file
+on purpose. Keep them somewhere that isn't the repo.
 
 Made with care. 🦆

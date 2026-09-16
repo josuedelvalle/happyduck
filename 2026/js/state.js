@@ -1,28 +1,55 @@
 /* ============================================================
    STATE — progress saved in localStorage.
    ------------------------------------------------------------
-   Progress is just the list of found codes. Everything else
-   (which rooms are done, the clues, the coordinates) is derived
-   from that list, so the stored data stays tiny and robust.
+   Two things are stored: the codes found, and the cases solved
+   by guessing. Everything else (rooms done, clues, how much of
+   each codeword is visible) is derived from those two lists, so
+   the stored data stays tiny and robust.
+
+   v2 changed the shape from a bare array to { found, solved },
+   so the key is versioned — an old v1 progress simply doesn't
+   load instead of crashing the page.
    ============================================================ */
 
-const STORAGE_KEY = "happyduck.progress.v1";
+const STORAGE_KEY = "happyduck.progress.v2";
 
 const State = {
-  /** Read the found-codes array from localStorage. */
-  getFound() {
+  /* ---- Raw storage ----------------------------------------- */
+
+  /** Read { found, solved } from localStorage, always well-formed. */
+  getProgress() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
+      const parsed = raw ? JSON.parse(raw) : null;
+      return {
+        found: Array.isArray(parsed?.found) ? parsed.found : [],
+        solved: Array.isArray(parsed?.solved) ? parsed.solved : [],
+      };
     } catch {
-      return [];
+      return { found: [], solved: [] };
     }
   },
 
-  /** Save the found-codes array. */
-  _save(list) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  _save(progress) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
   },
+
+  /** Codes found so far. */
+  getFound() {
+    return this.getProgress().found;
+  },
+
+  /** Case ids unlocked by guessing the codeword. */
+  getSolved() {
+    return this.getProgress().solved;
+  },
+
+  /** Wipe all progress. */
+  reset() {
+    localStorage.removeItem(STORAGE_KEY);
+  },
+
+  /* ---- Postcards ------------------------------------------- */
 
   /** Look up a postcard by its code. Returns the code object or null. */
   findCode(input) {
@@ -32,7 +59,7 @@ const State = {
 
   /**
    * Try a code.
-   * → { ok:true, clue, locationId, already:false } on first success
+   * → { ok:true, clue, locationId, caseId, already:false } on first success
    * → { ok:true, ..., already:true } if it was already found
    * → { ok:false } if the code is invalid
    */
@@ -40,39 +67,145 @@ const State = {
     const match = this.findCode(input);
     if (!match) return { ok: false };
 
-    const found = this.getFound();
-    if (found.includes(match.code)) {
-      return { ok: true, clue: match.clue, locationId: match.locationId, already: true };
+    const progress = this.getProgress();
+    const already = progress.found.includes(match.code);
+    if (!already) {
+      progress.found.push(match.code);
+      this._save(progress);
     }
-    found.push(match.code);
-    this._save(found);
-    return { ok: true, clue: match.clue, locationId: match.locationId, already: false };
+    return {
+      ok: true,
+      already,
+      clue: match.clue,
+      locationId: match.locationId,
+      caseId: match.caseId,
+    };
   },
 
-  /** Wipe all progress. */
-  reset() {
-    localStorage.removeItem(STORAGE_KEY);
+  /* ---- Guessing a case ------------------------------------- */
+
+  /**
+   * Normalise a guess so near-misses still count: lowercase,
+   * strip accents, collapse whitespace, drop a leading article.
+   * "  El Perfume " and "perfumería" both reduce to something
+   * the accept list can match.
+   */
+  _normalise(text) {
+    return String(text)
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "") // combining accents
+      .replace(/[^a-z0-9\s]/g, " ")
+      .replace(/\s+/g, " ")
+      .replace(/^(the|a|an|el|la|los|las|un|una|le|les|du|de)\s+/, "")
+      .trim();
   },
 
-  /** How many postcards found. */
+  /**
+   * Try to unlock a case by naming it.
+   * → { ok:true, already:boolean } when the guess is accepted
+   * → { ok:false } otherwise
+   */
+  guess(caseId, input) {
+    const theCase = CONFIG.caseById(caseId);
+    if (!theCase) return { ok: false };
+
+    const value = this._normalise(input);
+    if (!value) return { ok: false };
+
+    const accepted = [theCase.word, ...(theCase.accept || [])].map((a) =>
+      this._normalise(a),
+    );
+    if (!accepted.includes(value)) return { ok: false };
+
+    const progress = this.getProgress();
+    const already = progress.solved.includes(caseId);
+    if (!already) {
+      progress.solved.push(caseId);
+      this._save(progress);
+    }
+    return { ok: true, already };
+  },
+
+  /* ---- Per-case progress ----------------------------------- */
+
+  /** Codes found that belong to this case. */
+  foundForCase(caseId) {
+    return this.getFound()
+      .map((c) => this.findCode(c))
+      .filter((c) => c && c.caseId === caseId);
+  },
+
+  countForCase(caseId) {
+    return this.foundForCase(caseId).length;
+  },
+
+  totalForCase(caseId) {
+    return CONFIG.codesForCase(caseId).length;
+  },
+
+  /** All of this case's postcards found? */
+  isCaseComplete(caseId) {
+    return this.countForCase(caseId) >= this.totalForCase(caseId);
+  },
+
+  /** Guessed rather than completed. */
+  isCaseGuessed(caseId) {
+    return this.getSolved().includes(caseId);
+  },
+
+  /** Unlocked either way — this is what the final screen checks. */
+  isCaseRevealed(caseId) {
+    return this.isCaseComplete(caseId) || this.isCaseGuessed(caseId);
+  },
+
+  /**
+   * The codeword as it currently reads. Every letter starts as
+   * "_" and each found postcard fills in its slice, addressed by
+   * `at` (index into the word) and `value` (the letters). Once
+   * the case is unlocked the whole word is returned.
+   */
+  wordFor(caseId) {
+    const theCase = CONFIG.caseById(caseId);
+    if (!theCase) return "";
+    if (this.isCaseRevealed(caseId)) return theCase.word;
+
+    const letters = Array.from(theCase.word, () => "_");
+    this.foundForCase(caseId).forEach(({ fragment }) => {
+      if (!fragment) return;
+      for (let i = 0; i < fragment.value.length; i++) {
+        const idx = fragment.at + i;
+        if (idx < letters.length) letters[idx] = fragment.value[i];
+      }
+    });
+    return letters.join("");
+  },
+
+  /* ---- Overall progress ------------------------------------ */
+
+  /** How many postcards found, across both cases. */
   count() {
     return this.getFound().length;
   },
 
-  /** Whole thing solved? */
+  /** Both cases unlocked? */
   isComplete() {
-    return this.count() >= CONFIG.total;
+    return CONFIG.cases.every((c) => this.isCaseRevealed(c.id));
   },
 
-  /** Percentage 0–100. */
+  /** Percentage 0–100, by postcards found. */
   completion() {
     return Math.round((this.count() / CONFIG.total) * 100);
   },
 
+  /* ---- Rooms and clues ------------------------------------- */
+
   /** Set of location ids that have at least one found postcard. */
   investigatedIds() {
-    const found = this.getFound();
-    const ids = found.map((c) => this.findCode(c)?.locationId).filter(Boolean);
+    const ids = this.getFound()
+      .map((c) => this.findCode(c)?.locationId)
+      .filter(Boolean);
     return Array.from(new Set(ids));
   },
 
@@ -85,52 +218,5 @@ const State = {
     return this.getFound()
       .map((c) => this.findCode(c)?.clue)
       .filter(Boolean);
-  },
-
-  /** String-indices of `destStr` that hold a digit, left to right (skips the dot). */
-  _digitPositions(destStr) {
-    const positions = [];
-    for (let i = 0; i < destStr.length; i++) {
-      if (destStr[i] !== ".") positions.push(i);
-    }
-    return positions;
-  },
-
-  /**
-   * Reveal only the digits earned so far on one axis. Every digit
-   * starts as "_"; each found fragment (other than a plain
-   * "confirm" clue) fills in its slice, addressed by `at` (a
-   * 0-based digit index — NOT a string index, so it isn't thrown
-   * off by the "." ) and `value` (the digits themselves).
-   */
-  _revealAxis(destStr, frags, axis) {
-    const chars = Array.from(destStr, (c) => (c === "." ? "." : "_"));
-    const digitPositions = this._digitPositions(destStr);
-    frags
-      .filter((f) => f.axis === axis && f.value !== "confirm")
-      .forEach((f) => {
-        for (let i = 0; i < f.value.length; i++) {
-          const strIdx = digitPositions[f.at + i];
-          if (strIdx !== undefined) chars[strIdx] = f.value[i];
-        }
-      });
-    return chars.join("");
-  },
-
-  /**
-   * Build the currently-known coordinates. Every digit starts
-   * hidden ("_") and is revealed one fragment at a time as
-   * postcards are found, so the dashboard fills in gradually.
-   */
-  coordinates() {
-    if (this.isComplete()) {
-      return { lat: CONFIG.destination.lat, lng: CONFIG.destination.lng };
-    }
-    const frags = this.getFound().map((c) => this.findCode(c)?.fragment).filter(Boolean);
-
-    return {
-      lat: this._revealAxis(CONFIG.destination.lat, frags, "lat"),
-      lng: this._revealAxis(CONFIG.destination.lng, frags, "lng"),
-    };
   },
 };

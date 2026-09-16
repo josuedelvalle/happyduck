@@ -128,7 +128,7 @@
         <div id="menu-reset" hidden>
           <h2 class="menu__h2">Reset the investigation?</h2>
           <p class="menu__p">
-            All collected clues, coordinates and progress will be permanently
+            All collected clues, codewords and progress will be permanently
             erased. This can't be undone.
           </p>
           <div class="menu__actions">
@@ -141,9 +141,9 @@
         <div id="menu-about" hidden>
           <h2 class="menu__h2">About</h2>
           <p class="menu__p">
-            Happy Duck Investigation is a private birthday treasure hunt. Find
-            the postcards hidden around the home, enter their codes, and piece
-            together the coordinates that reveal the gift.
+            Happy Duck Investigation is a private birthday treasure hunt. Two
+            cases are open. Find the postcards hidden around the home, enter
+            their codes, and name each case before the clues run out.
           </p>
           <p class="menu__p menu__p--small">Case #2026 · Made with care.</p>
           <div class="menu__actions">
@@ -170,21 +170,8 @@
         <div class="progress__pct"><span id="progress-pct">0</span>%</div>
       </section>
 
-      <!-- Coordinates card (clickable → final) -->
-      <a href="final.html" class="card pad coord-card" id="coord-card">
-        <div class="row-between">
-          <span class="eyebrow">Coordinates</span>
-          <span class="chevron" aria-hidden="true">›</span>
-        </div>
-        <div class="coord" id="coord-value">
-          <span id="coord-lat">__.____</span>
-          <span class="coord__sep">,</span>
-          <span id="coord-lng">_.____</span>
-        </div>
-        <p class="muted small" id="coord-hint">
-          Find postcards to complete the coordinates.
-        </p>
-      </a>
+      <!-- Case files — two open investigations, built by JS -->
+      <section id="cases" class="cases" aria-label="Case files"></section>
 
       <!-- Locations grid — rooms are injected by JS from config -->
       <section id="grid" class="grid" aria-label="Locations"></section>

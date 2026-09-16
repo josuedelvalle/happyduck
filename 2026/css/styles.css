@@ -279,10 +279,19 @@ button {
 .page-centered {
   position: relative;
   display: flex;
-  align-items: center;
+  /* NOT align-items:center — a flex item taller than the viewport gets
+     centred, which pushes its top out of reach and can't be scrolled
+     back to. flex-start + `margin:auto` on the child centres short
+     pages exactly the same way, and lets tall ones scroll. */
+  align-items: flex-start;
   justify-content: center;
   padding: 24px;
-  overflow: hidden;
+  /* Was `overflow:hidden`, which existed only to crop the blobs — but on
+     <body> it also killed vertical scrolling. Clip sideways only. */
+  overflow-x: clip;
+}
+.page-centered > main {
+  margin: auto;
 }
 .row-between {
   display: flex;
@@ -292,7 +301,10 @@ button {
 
 /* Ambient blurred blobs */
 .blob {
-  position: absolute;
+  /* Fixed, not absolute: the negative offsets below would otherwise
+     extend the scrollable area past the content now that <body> no
+     longer clips its overflow. */
+  position: fixed;
   width: 280px;
   height: 280px;
   border-radius: 50%;
@@ -1157,4 +1169,194 @@ button {
 }
 .final-locked__back {
   margin-top: 32px;
+}
+
+/* ---- 5. Page: Dashboard — case files -----------------------
+   Two open investigations, each locked behind a codeword that
+   fills in letter by letter. Built by dashboard.js.
+------------------------------------------------------------- */
+.cases {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.case {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 20px;
+  transition:
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+.case.is-solved {
+  border-color: rgba(94, 122, 103, 0.45);
+  background: rgba(94, 122, 103, 0.06);
+}
+.case__count {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* The codeword. One box per letter, so an unsolved word reads as
+   a row of gaps rather than one long rule — the same reason the
+   old coordinate display had to switch ligatures off. */
+.case__word {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 14px 0 18px;
+}
+.slot {
+  flex: 1 1 0;
+  min-width: 26px;
+  max-width: 44px;
+  aspect-ratio: 3 / 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--muted);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+.slot.is-filled {
+  border-color: rgba(94, 122, 103, 0.45);
+  background: rgba(94, 122, 103, 0.1);
+  color: var(--ink);
+  animation: pop 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+.case__guess {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  margin-top: 8px;
+}
+.case__guess .input-wrap {
+  flex: 1;
+}
+.case__guess .btn {
+  flex-shrink: 0;
+}
+.case__solved {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+}
+.case__cta {
+  margin-top: 14px;
+}
+
+/* Which case a just-found postcard belongs to */
+.feedback__tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 99px;
+  background: rgba(94, 122, 103, 0.15);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--primary);
+}
+
+/* ---- 5. Page: Clues — per-case grouping -------------------- */
+.clue-group {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.clue-group:first-child {
+  margin-top: 0;
+}
+.clue-group__state {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ---- 5. Page: Final — two files ---------------------------- */
+.locked-words {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 20px;
+  text-align: left;
+}
+.locked-words__row .eyebrow {
+  display: block;
+  margin-bottom: 6px;
+}
+.locked-words__row.is-solved .eyebrow {
+  color: var(--primary);
+}
+.case__word--sm {
+  margin: 0;
+  gap: 4px;
+}
+.case__word--sm .slot {
+  min-width: 20px;
+  max-width: 32px;
+  font-size: 15px;
+  border-radius: 6px;
+}
+
+.destinations {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 28px;
+  text-align: left;
+  animation: pop 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+.destination__kicker {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+}
+.destination__body {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.destination__takeaway {
+  margin-top: 12px;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink);
+}
+.destination__where {
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.destination__transport {
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.destination__links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+/* The solved view carries two full cards now, so give it room. */
+#solved-view {
+  max-width: 520px;
 }

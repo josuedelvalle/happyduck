@@ -48,14 +48,14 @@
           aria-hidden="true"
         />
       </button>
-      <div class="pill"><span>🔒</span> The case isn't solved yet</div>
+      <div class="pill"><span>🔒</span> The cases aren't closed yet</div>
       <h1 class="final-locked__title">Keep investigating</h1>
       <p class="final-locked__text">
         You've found <span id="locked-found">0</span> of
-        <span id="locked-total">6</span> clues. Complete the coordinates to
-        reveal the destination.
+        <span id="locked-total">6</span> clues. Close both cases — by finding
+        every postcard, or by naming them — to open the file.
       </p>
-      <div class="coord coord--sm" id="locked-coord">__.____ , _.____</div>
+      <div class="locked-words" id="locked-words"></div>
       <a href="dashboard.html" class="btn btn--ghost final-locked__back"
         >← Back to investigation</a
       >
@@ -80,34 +80,16 @@
         />
       </button>
 
-      <h1 class="final__title">CASE SOLVED</h1>
-      <p class="final__subtitle">You pieced the coordinates together.</p>
-      <div class="coord final__coord" id="final-coord">48.8726, 2.7767</div>
+      <h1 class="final__title">CASE CLOSED</h1>
+      <p class="final__subtitle" id="final-subtitle">Both files are yours.</p>
 
       <!-- Reveal button (before) -->
       <button id="reveal-btn" class="btn btn--primary btn--block final__reveal">
-        Reveal Destination
+        Open the File
       </button>
 
-      <!-- Destination (after reveal) -->
-      <div id="destination" class="destination" hidden>
-        <div class="destination__box">
-          <p class="eyebrow">Your destination</p>
-          <p class="destination__name" id="dest-name">Disneyland Paris</p>
-          <p class="destination__coord">
-            <span>📍</span> <span id="dest-coord">48.8726, 2.7767</span>
-          </p>
-        </div>
-        <a
-          id="maps-link"
-          href="#"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn btn--primary btn--block final__maps"
-        >
-          Open in Maps ↗
-        </a>
-      </div>
+      <!-- The two workshops (after reveal) — built by JS from config -->
+      <div id="destinations" class="destinations" hidden></div>
 
       <a href="dashboard.html" class="final__home">← Back to home</a>
     </main>

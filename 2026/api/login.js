@@ -20,9 +20,14 @@ export default function handler(request, response) {
   // Vercel parses JSON bodies automatically into request.body.
   const submitted = request.body?.password ?? "";
 
-  // The password lives in an environment variable. During local
-  // development it falls back to a dev value (see README).
+  // The password lives in an environment variable — in Vercel for
+  // production, in .env.local for `vercel dev`. There is deliberately
+  // no hardcoded fallback: a default password in the repo is a
+  // password in the repo. If it's unset, every login fails closed.
   const expected = process.env.APP_PASSWORD;
+  if (!expected) {
+    return response.status(500).json({ ok: false, error: "Not configured" });
+  }
 
   if (submitted !== expected) {
     return response.status(401).json({ ok: false });

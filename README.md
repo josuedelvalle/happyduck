@@ -15,7 +15,7 @@ Each year lives in its own folder (`2026/`, `2027/`, ...) and is fully independe
 
 ```
 happyduck/
-├── 2026/     ← plain HTML/CSS/JS
+├── 2026/     ← plain HTML/CSS/JS (the deployed edition)
 ├── 2027/     ← (whatever comes next)
 └── README.md ← this index
 ```
