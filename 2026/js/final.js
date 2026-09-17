@@ -45,15 +45,18 @@
   /* ---- Solved view ----------------------------------------- */
   $("#solved-view").hidden = false;
 
-  // A little credit where it's due: did she call it early?
-  const guessedEarly = CONFIG.cases.filter(
-    (c) => State.isCaseGuessed(c.id) && !State.isCaseComplete(c.id),
-  ).length;
-  if (guessedEarly > 0) {
+  // Credit where it's due. By the time we're here every postcard
+  // has been found, so "early" means she named it before the last
+  // one turned up — guessedAt remembers how many she had then.
+  const early = CONFIG.cases.filter((c) => {
+    const at = State.guessedAt(c.id);
+    return at !== null && at < State.totalForCase(c.id);
+  });
+  if (early.length) {
     $("#final-subtitle").textContent =
-      guessedEarly === CONFIG.cases.length
-        ? "You named both cases before the clues ran out."
-        : "You named one of them before the clues ran out.";
+      early.length === CONFIG.cases.length
+        ? "You named both cases before the last postcard turned up."
+        : `You named ${early[0].label} before the last postcard turned up.`;
   }
 
   $("#destinations").innerHTML = CONFIG.cases

@@ -37,7 +37,8 @@
               ? "✓ " + theCase.word
               : State.countForCase(theCase.id) +
                 "/" +
-                State.totalForCase(theCase.id)
+                State.totalForCase(theCase.id) +
+                (State.isCaseGuessed(theCase.id) ? " · called" : "")
           }
         </span>`;
       list.appendChild(head);

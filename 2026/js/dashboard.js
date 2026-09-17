@@ -22,6 +22,57 @@
   }
 
   /* ---- Case files ------------------------------------------ */
+
+  /**
+   * The bottom half of a case card. Three states:
+   *   all postcards found  → the file opens
+   *   named but not found  → credit, and keep hunting
+   *   neither              → the guess box
+   */
+  function caseFooter(theCase, { revealed, guessed, found, total, left }) {
+    if (revealed) {
+      const credit =
+        guessed && State.guessedAt(theCase.id) !== null
+          ? ` — you called it with ${State.guessedAt(theCase.id)} of ${total} clues`
+          : "";
+      return `
+        <p class="case__solved">
+          <span aria-hidden="true">✓</span> Solved${credit}
+        </p>
+        <a href="final.html" class="btn btn--ghost btn--block case__cta">
+          Open the file →
+        </a>`;
+    }
+
+    if (guessed) {
+      return `
+        <p class="case__called">
+          <span aria-hidden="true">✓</span> You called it.
+          ${left} postcard${left === 1 ? "" : "s"} still out there.
+        </p>`;
+    }
+
+    return `
+      <label class="field-label" for="guess-${theCase.id}">
+        Name this case
+      </label>
+      <div class="case__guess">
+        <div class="input-wrap">
+          <span class="input-wrap__icon" aria-hidden="true">?</span>
+          <input
+            id="guess-${theCase.id}"
+            class="input"
+            autocomplete="off"
+            placeholder="What is it?"
+          />
+        </div>
+        <button class="btn btn--primary" data-guess="${theCase.id}">
+          Guess
+        </button>
+      </div>
+      <div class="feedback" id="guess-feedback-${theCase.id}" hidden></div>`;
+  }
+
   function renderCases() {
     const wrap = $("#cases");
     wrap.innerHTML = "";
@@ -31,9 +82,11 @@
       const guessed = State.isCaseGuessed(theCase.id);
       const found = State.countForCase(theCase.id);
       const total = State.totalForCase(theCase.id);
+      const left = total - found;
 
       const section = document.createElement("section");
-      section.className = "case" + (revealed ? " is-solved" : "");
+      section.className =
+        "case" + (revealed ? " is-solved" : guessed ? " is-called" : "");
 
       // One <span> per letter, so the gaps stay visually separate
       // (a run of "_" in a mono font can otherwise read as a rule).
@@ -52,37 +105,7 @@
 
         <div class="case__word" aria-label="Codeword">${slots}</div>
 
-        ${
-          revealed
-            ? `<p class="case__solved">
-                 <span aria-hidden="true">✓</span> Solved${
-                   guessed && found < total
-                     ? ` — you called it with ${found} of ${total} clues`
-                     : ""
-                 }
-               </p>
-               <a href="final.html" class="btn btn--ghost btn--block case__cta">
-                 Open the file →
-               </a>`
-            : `<label class="field-label" for="guess-${theCase.id}">
-                 Name this case
-               </label>
-               <div class="case__guess">
-                 <div class="input-wrap">
-                   <span class="input-wrap__icon" aria-hidden="true">?</span>
-                   <input
-                     id="guess-${theCase.id}"
-                     class="input"
-                     autocomplete="off"
-                     placeholder="What is it?"
-                   />
-                 </div>
-                 <button class="btn btn--primary" data-guess="${theCase.id}">
-                   Guess
-                 </button>
-               </div>
-               <div class="feedback" id="guess-feedback-${theCase.id}" hidden></div>`
-        }`;
+        ${caseFooter(theCase, { revealed, guessed, found, total, left })}`;
 
       wrap.appendChild(section);
     });

@@ -6,10 +6,12 @@ JavaScript** — plus one tiny serverless function so the password stays secret.
 The 2026 edition runs **two parallel cases**: two gifts, in two places. The
 player logs in, investigates rooms, finds hidden physical postcards and enters
 their codes. Each postcard reveals a clue and a slice of its case's **codeword**,
-which fills in letter by letter. A case can also be closed early by simply
-**naming it** — guessing `PERFUME` from two clues closes that file on the spot.
-When both are closed, the final screen reveals the two workshops with their
-Maps links.
+which fills in letter by letter.
+
+She can also try to **name a case** at any point. Guessing `PERFUME` from two
+clues is recorded and credited at the end — but it does not open the file.
+Only finding every postcard does. Naming is a bragging right, not a shortcut,
+so no lucky guess makes the rest of the hunt pointless.
 
 ## What's inside
 
@@ -51,9 +53,9 @@ Guesses are normalised before comparison (lowercased, accents stripped, a
 leading article dropped), so `Perfume`, `perfumería` and `el parfum` all match.
 
 Progress lives in localStorage under `happyduck.progress.v2` as
-`{ found: [...], solved: [...] }` — the codes found, and the cases closed by
-guessing. Everything else is derived from those two lists, so a reset is one
-`removeItem`.
+`{ found: [...], solved: [{ caseId, foundAt }] }` — the codes found, and each
+case she named along with how many postcards she had at the time. Everything
+else is derived from those two lists, so a reset is one `removeItem`.
 
 ## The password is safe
 

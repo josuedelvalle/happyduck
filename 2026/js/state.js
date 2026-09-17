@@ -1,10 +1,14 @@
 /* ============================================================
    STATE — progress saved in localStorage.
    ------------------------------------------------------------
-   Two things are stored: the codes found, and the cases solved
-   by guessing. Everything else (rooms done, clues, how much of
-   each codeword is visible) is derived from those two lists, so
-   the stored data stays tiny and robust.
+   Two things are stored: the codes found, and the cases she has
+   correctly named. Everything else (rooms done, clues, how much
+   of each codeword is visible) is derived from those two lists,
+   so the stored data stays tiny and robust.
+
+   Naming a case is credit, not a shortcut: it does NOT open the
+   file. Only finding all of that case's postcards does. That way
+   guessing stays fun without letting her skip half the house.
 
    v2 changed the shape from a bare array to { found, solved },
    so the key is versioned — an old v1 progress simply doesn't
@@ -39,9 +43,19 @@ const State = {
     return this.getProgress().found;
   },
 
-  /** Case ids unlocked by guessing the codeword. */
+  /**
+   * Cases she has correctly named, as { caseId, foundAt } where
+   * foundAt is how many of that case's postcards she had at the
+   * time — that's what earns the "called it with 2 of 3" credit.
+   * Older entries were bare id strings; normalise them here so a
+   * saved game from before this change still loads.
+   */
   getSolved() {
-    return this.getProgress().solved;
+    return this.getProgress().solved.map((entry) =>
+      typeof entry === "string"
+        ? { caseId: entry, foundAt: null }
+        : entry,
+    );
   },
 
   /** Wipe all progress. */
@@ -120,9 +134,12 @@ const State = {
     if (!accepted.includes(value)) return { ok: false };
 
     const progress = this.getProgress();
-    const already = progress.solved.includes(caseId);
+    const already = this.isCaseGuessed(caseId);
     if (!already) {
-      progress.solved.push(caseId);
+      progress.solved.push({
+        caseId,
+        foundAt: this.countForCase(caseId),
+      });
       this._save(progress);
     }
     return { ok: true, already };
@@ -150,14 +167,24 @@ const State = {
     return this.countForCase(caseId) >= this.totalForCase(caseId);
   },
 
-  /** Guessed rather than completed. */
+  /** Has she named this case correctly? Credit only — see below. */
   isCaseGuessed(caseId) {
-    return this.getSolved().includes(caseId);
+    return this.getSolved().some((s) => s.caseId === caseId);
   },
 
-  /** Unlocked either way — this is what the final screen checks. */
+  /** How many postcards she had when she named it (null if never). */
+  guessedAt(caseId) {
+    const entry = this.getSolved().find((s) => s.caseId === caseId);
+    return entry ? entry.foundAt : null;
+  },
+
+  /**
+   * Is the file open? Postcards only. Naming the case does not
+   * unlock it — otherwise a lucky guess on clue one would make
+   * the other five postcards pointless to go and find.
+   */
   isCaseRevealed(caseId) {
-    return this.isCaseComplete(caseId) || this.isCaseGuessed(caseId);
+    return this.isCaseComplete(caseId);
   },
 
   /**

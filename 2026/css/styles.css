@@ -1253,6 +1253,18 @@ button {
   font-weight: 600;
   color: var(--primary);
 }
+
+/* Named correctly, but the postcards are still out there. Amber
+   rather than green: credit earned, file not open yet. */
+.case.is-called {
+  border-color: rgba(232, 165, 75, 0.45);
+}
+.case__called {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--accent);
+}
 .case__cta {
   margin-top: 14px;
 }

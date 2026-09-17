@@ -68,7 +68,7 @@ const CONFIG = {
     {
       id: "b",
       label: "Case B",
-      codename: "THE ORGAN",
+      codename: "THE LAB",
       word: "PERFUME",
       accept: [
         "perfume",
